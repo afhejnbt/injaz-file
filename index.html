@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملف الإنجاز الإلكتروني | عبدالرزاق عماد</title>
+    <!-- خط Cairo الهندسي المودرن -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #faf7f2;        /* بيج فاتح دافئ مريح */
+            --card-cream: #f2ebe1;      /* بيج هندسي للبطاقات */
+            --text-dark: #1c1917;       /* أسود حبري داكن */
+            --text-muted: #78716c;      /* رمادي دافئ */
+            --accent-geo: #2563eb;       /* أزرق لمسات هندسية */
+            --border-geo: #e7e5e4;      /* حدود حادة ونظيفة */
+            --shadow-geo: 0 4px 20px rgba(28, 25, 23, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- زر القائمة الجانبيّة (Burger Icon) --- */
+        .burger-btn {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 1100;
+            background: var(--card-cream);
+            border: 1px solid var(--border-geo);
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: var(--shadow-geo);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .burger-btn span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background-color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        /* --- القائمة الجانبية (Sidebar) --- */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 290px;
+            height: 100vh;
+            background-color: var(--card-cream);
+            border-left: 1px solid var(--border-geo);
+            z-index: 1000;
+            padding: 5rem 1.5rem 2rem 1.5rem;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar.active {
+            right: 0;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.08);
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.6rem;
+        }
+
+        .sidebar-menu button {
+            width: 100%;
+            text-align: right;
+            background: transparent;
+            border: 1px solid transparent;
+            padding: 0.7rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-menu button:hover, .sidebar-menu button.active {
+            background-color: var(--bg-cream);
+            border-color: var(--border-geo);
+            color: var(--accent-geo);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(28, 25, 23, 0.2);
+            backdrop-filter: blur(2px);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* --- حاوية الصفحات --- */
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            animation: geoFade 0.4s ease-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes geoFade {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- 1. صفحة الغلاف الهندسي --- */
+        .cover-card {
+            background: var(--card-cream);
+            border: 1px solid var(--border-geo);
+            border-radius: 12px;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow-geo);
+        }
+
+        .cover-card::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            border-top: 2px solid var(--text-dark);
+            border-right: 2px solid var(--text-dark);
+        }
+
+        .cover-card::after {
+            content: '';
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            width: 35px;
+            height: 35px;
+            border-bottom: 2px solid var(--text-dark);
+            border-left: 2px solid var(--text-dark);
+        }
+
+        .cover-title {
+            font-size: 2.6rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .cover-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            font-weight: 600;
+        }
+
+        .cover-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            border-top: 1px solid var(--border-geo);
+            padding-top: 2rem;
+            text-align: right;
+        }
+
+        .meta-box {
+            background: var(--bg-cream);
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-geo);
+        }
+
+        .meta-box label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .meta-box span {
+            font-size: 0.95rem;
+            font-weight: 800;
+        }
+
+        /* --- تصميم البطاقات والصفحات الداخلية --- */
+        .geo-card {
+            background: var(--card-cream);
+            border: 1px solid var(--border-geo);
+            border-radius: 10px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-geo);
+        }
+
+        .geo-header {
+            border-bottom: 2px solid var(--text-dark);
+            padding-bottom: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .geo-header h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        /* الشبكات والتنسيقات الفرعية */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .info-card {
+            background: var(--bg-cream);
+            border: 1px solid var(--border-geo);
+            padding: 1.25rem;
+            border-radius: 8px;
+        }
+
+        .info-card h4 {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .info-card p {
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .skill-tag {
+            background: var(--text-dark);
+            color: var(--bg-cream);
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* قسم المواد */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .subject-box {
+            background: var(--bg-cream);
+            border: 1px solid var(--border-geo);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .subject-box h3 {
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--border-geo);
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .subject-box ul {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .subject-box ul li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* شبكة الشهادات */
+        .certs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .cert-card {
+            background: var(--bg-cream);
+            border: 1px solid var(--border-geo);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cert-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-geo);
+        }
+
+        .cert-content {
+            padding: 1rem;
+        }
+
+        .cert-content h4 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .cert-content p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* جدول الحصص */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-cream);
+            border-radius: 6px;
+            overflow: hidden;
+            font-size: 0.9rem;
+        }
+
+        .schedule-table th, .schedule-table td {
+            border: 1px solid var(--border-geo);
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        .schedule-table th {
+            background: var(--text-dark);
+            color: var(--bg-cream);
+            font-weight: 700;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 1rem;
+            left: 1.5rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- زر البرغر -->
+    <button class="burger-btn" onclick="toggleSidebar()" aria-label="القائمة">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
+        <div>
+            <h3 style="font-size: 1.1rem; font-weight: 900; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-geo); padding-bottom: 0.5rem;">
+                📐 أقسام الملف
+            </h3>
+            <ul class="sidebar-menu">
+                <li><button class="active" onclick="navigateTo('cover')">01. الغلاف الرسمي</button></li>
+                <li><button onclick="navigateTo('intro')">02. المقدمة</button></li>
+                <li><button onclick="navigateTo('cv')">03. السيرة الذاتية</button></li>
+                <li><button onclick="navigateTo('goals')">04. أهدافي</button></li>
+                <li><button onclick="navigateTo('subjects')">05. المواد الدراسية</button></li>
+                <li><button onclick="navigateTo('certs')">06. الشهادات والبرامج</button></li>
+                <li><button onclick="navigateTo('schedule')">07. الجدول الدراسي</button></li>
+            </ul>
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-muted);">
+            تصميم هندسي متكامل &copy; 2026
+        </div>
+    </aside>
+
+    <main class="main-container">
+
+        <!-- 1. صفحة الغلاف -->
+        <div id="cover" class="page active">
+            <div class="cover-card">
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 0.5rem;">[ E - P O R T F O L I O ]</div>
+                <h1 class="cover-title">ملف الإنجاز الإلكتروني</h1>
+                <p class="cover-subtitle">توثيق للمسيرة الأكاديمية والأنشطة والمهارات</p>
+
+                
+            </div>
+        </div>
+
+        <!-- 2. صفحة المقدمة -->
+        <div id="intro" class="page">
+            <div class="geo-card">
+                <div class="geo-header">
+                    <h2>02 / المقدمة والافتتاحية</h2>
+                </div>
+                <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-dark);">
+                    بسم الله الرحمن الرحيم، الحمد لله الذي بنعمته تتم الصالحات. أضع بين أيديكم ملف إنجازي الإلكتروني للمرحلة الثانوية، والذي يمثل حصيلة جهدي وعملي خلال العام الدراسي. يسعدني أن يضم هذا الملف ثمرة مشاركاتي الأكاديمية والأنشطة التطوعية والتدريبية التي أسهمت في بناء مهاراتي وتوسيع آفاقي العلمية والعملية.
+                </p>
+            </div>
+        </div>
+
+        <!-- 3. صفحة السيرة الذاتية -->
+        <div id="cv" class="page">
+            <div class="geo-card">
+                <div class="geo-header">
+                    <h2>03 / السيرة الذاتية الرسمية</h2>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>الاسم الثلاثي</h4>
+                        <p>عبدالرزاق عماد جعفر أحمد</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>المدرسة</h4>
+                        <p>عبدالله بن سلام الثانوية</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>الصف والشعبة</h4>
+                        <p>الثالث ثانوي (الشعبة 301)</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>المسار التعليمي</h4>
+                        <p>المسار العام</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h4 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">المهارات العامة والتقنية</h4>
+                    <div class="skills-container">
+                        <span class="skill-tag">تطوير الويب وبرمجة التطبيقات</span>
+                        <span class="skill-tag">التفكير الهندسي وحل المشكلات</span>
+                        <span class="skill-tag">التعلم الذاتي والتطوير المستمر</span>
+                        <span class="skill-tag">المشاركة التطوعية والعمل الجماعي</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. صفحة الأهداف -->
+        <div id="goals" class="page">
+            <div class="geo-card">
+                <div class="geo-header">
+                    <h2>04 / الأهداف والرؤية</h2>
+                </div>
+                <div style="display: grid; gap: 1rem;">
+                    <div class="info-card">
+                        <h4 style="color: var(--accent-geo);">الهدف الأكاديمي الحالي</h4>
+                        <p style="font-size: 0.95rem; font-weight: 600; margin-top: 0.3rem;">
+                            التفوق في المقرارات الدراسية واجتياز اختبارات القدرات العامة والتحصيلي بمعدل ممتاز يؤهلني للالتحاق بالجامعة.
+                        </p>
+                    </div>
+                    <div class="info-card">
+                        <h4 style="color: var(--accent-geo);">الهدف المهني والمستقبلي</h4>
+                        <p style="font-size: 0.95rem; font-weight: 600; margin-top: 0.3rem;">
+                            التخصص والتميز في مجالات التقنية والهندسة، والمساهمة في بناء مشاريع وتطبيقات رقمية تخدم المجتمع.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. صفحة المواد الدراسية -->
+        <div id="subjects" class="page">
+            <div class="geo-card">
+                <div class="geo-header">
+                    <h2>05 / المقررات الدراسية والأعمال</h2>
+                </div>
+                <div class="subjects-grid">
+                    <div class="subject-box">
+                        <h3>الرياضيات</h3>
+                        <ul>
+                            <li>• مشاريع المهمة الأدائية</li>
+                            <li>• حلول أوراق العمل</li>
+                        </ul>
+                    </div>
+                    <div class="subject-box">
+                        <h3>التقنية الرقمية</h3>
+                        <ul>
+                            <li>• مشاريع برمجة الويب</li>
+                            <li>• قواعد البيانات والأنظمة</li>
+                        </ul>
+                    </div>
+                    <div class="subject-box">
+                        <h3>الفيزياء</h3>
+                        <ul>
+                            <li>• تقارير التجارب المخبرية</li>
+                            <li>• الملخصات والبحوث</li>
+                        </ul>
+                    </div>
+                    <div class="subject-box">
+                        <h3>اللغة الإنجليزية</h3>
+                        <ul>
+                            <li>• المقالات التقنية (Essays)</li>
+                            <li>• العروض الشفهية</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. صفحة الشهادات والإنجازات -->
+        <div id="certs" class="page">
+            <div class="geo-card">
+                <div class="geo-header">
+                    <h2>06 / الشهادات والبرامج التدريبية</h2>
+                </div>
+                <div class="certs-grid">
+                    
+                    <!-- شهادة 1 -->
+                    <div class="cert-card">
+                        <img src="image_d2d1bb.jpg" alt="شهادة ورشة طريقك إلى التحصيلي">
+                        <div class="cert-content">
+                            <h4>ورشة (طريقك إلى التحصيلي)</h4>
+                            <p>ثانوية عبدالله بن سلام[cite: 1]</p>
+                            <p style="font-weight: 700; color: var(--text-dark); margin-top: 0.3rem;">5 ساعات تطوعية + 6 درجات سلوك متميز[cite: 1]</p>
+                        </div>
+                    </div>
+
+                    <!-- شهادة 2 -->
+                    <div class="cert-card">
+                        <img src="image_d2d461.jpg" alt="شهادة دورة قصتي مع الورقي">
+                        <div class="cert-content">
+                            <h4>دورة (قصتي مع الورقي)</h4>
+                            <p>ثانوية عبدالله بن سلام[cite: 2]</p>
+                            <p style="font-weight: 700; color: var(--text-dark); margin-top: 0.3rem;">5 ساعات تطوعية + 6 درجات سلوك متميز[cite: 2]</p>
+                        </div>
+                    </div>
+
+                    <!-- شهادة 3 -->
+                    <div class="cert-card">
+                        <img src="image_d2d480.jpg" alt="شهادة برنامج قيادتي">
+                        <div class="cert-content">
+                            <h4>برنامج تثقيف السائقين "قيادتي"</h4>
+                            <p>لجنة السلامة المرورية بالمنطقة الشرقية[cite: 3]</p>
+                            <p style="font-weight: 700; color: var(--text-dark); margin-top: 0.3rem;">مسار المركبات الخفيفة[cite: 3]</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. صفحة الجدول الدراسي -->
+        <div id="schedule" class="page">
+            <div class="geo-card">
+                <div class="geo-header">
+                    <h2>07 / الجدول الدراسي (الشعبة 301)</h2>
+                </div>
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>اليوم</th>
+                            <th>الحصة 1</th>
+                            <th>الحصة 2</th>
+                            <th>الحصة 3</th>
+                            <th>الحصة 4</th>
+                            <th>الحصة 5</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>الأحد</td>
+                            <td>رياضيات</td>
+                            <td>تقنية رقمية</td>
+                            <td>فيزياء</td>
+                            <td>إنجليزي</td>
+                            <td>كيمياء</td>
+                        </tr>
+                        <tr>
+                            <td>الإثنين</td>
+                            <td>فيزياء</td>
+                            <td>رياضيات</td>
+                            <td>كيمياء</td>
+                            <td>تقنية رقمية</td>
+                            <td>إنجليزي</td>
+                        </tr>
+                        <tr>
+                            <td>الثلاثاء</td>
+                            <td>تقنية رقمية</td>
+                            <td>إنجليزي</td>
+                            <td>رياضيات</td>
+                            <td>فيزياء</td>
+                            <td>بدنية</td>
+                        </tr>
+                        <tr>
+                            <td>الأربعاء</td>
+                            <td>كيمياء</td>
+                            <td>فيزياء</td>
+                            <td>إنجليزي</td>
+                            <td>رياضيات</td>
+                            <td>تقنية رقمية</td>
+                        </tr>
+                        <tr>
+                            <td>الخميس</td>
+                            <td>إنجليزي</td>
+                            <td>رياضيات</td>
+                            <td>تقنية رقمية</td>
+                            <td>كيمياء</td>
+                            <td>نشاط</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        عبدالرزاق عماد جعفر &bull; ثانوية عبدالله بن سلام
+    </footer>
+
+    <!-- البرمجة السلسة للتنقل -->
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.overlay').classList.toggle('active');
+        }
+
+        function navigateTo(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(p => p.classList.remove('active'));
+
+            document.getElementById(pageId).classList.add('active');
+
+            const buttons = document.querySelectorAll('.sidebar-menu button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            toggleSidebar();
+        }
+    </script>
+</body>
+</html>
